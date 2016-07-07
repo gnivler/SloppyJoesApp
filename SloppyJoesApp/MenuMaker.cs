@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace SloppyJoesApp
 {
-    class MenuMaker
+    class MenuMaker : INotifyPropertyChanged
     {
         public int NumberOfItems { get; set; }
         public ObservableCollection<MenuItem> Menu { get; private set; }
@@ -16,6 +17,8 @@ namespace SloppyJoesApp
         private string[] Meats = { "Roast beef", "Salami", "Turkey", "Ham", "Pastrami" };
         private string[] Condiments = { "yellow mustard", "brown mustard", "honey mustard", "mayo", "relish", "French dressing" };
         private string[] Breads = { "rye", "white", "wheat", "pumpernickel", "Italian bread", "a roll" };
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MenuMaker()
         {
@@ -28,10 +31,24 @@ namespace SloppyJoesApp
         {
             Menu.Clear();
             GeneratedDate = DateTime.Now;
-            for (int i = 0; i < NumberOfItems; i++)
+            
+            for (int i = 0; Menu.Count() < NumberOfItems; i++)
             {
-                Menu.Add(CreateMenuItem());
+                bool unique = true;
+                MenuItem newItem = CreateMenuItem();
+                foreach (MenuItem item in Menu)
+                {
+                    if (newItem.ToString() == item.ToString())
+                    {
+                        unique = false;
+                    }
+                }
+                if (unique)
+                {
+                    Menu.Add(CreateMenuItem());
+                }
             }
+            OnPropertyChanged("GeneratedDate");
         }
 
         private MenuItem CreateMenuItem()
@@ -42,5 +59,13 @@ namespace SloppyJoesApp
             return new MenuItem(meat, condiment, bread);
         }
 
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler propertyChangedEvent = PropertyChanged;
+            if (propertyChangedEvent != null)
+            {
+                propertyChangedEvent(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
 }
