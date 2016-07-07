@@ -55,7 +55,7 @@
                     <TextBox TextWrapping="Wrap" Text="{Binding NumberOfItems, Mode=TwoWay}"/>
                     <Button Content="Make a new menu" Margin="20,0,0,0" Click="Button_Click"></Button>
                 </StackPanel>
-                <ListView x:Name="MenuListView" ItemsSource="{Binding Menu}" BorderBrush="White" BorderThickness="2" Padding="10">
+                <ListView x:Name="MenuListView" ItemsSource="{Binding Menu}" Padding="5">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
